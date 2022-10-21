@@ -1,0 +1,17 @@
+<h1><%= article.title %></h1>
+<div><%= article.created_at %> <%= "last updated at #{ article.updated_at }" if article.updated_at %></div>
+
+<%# TODO: add support for localization: l article.created_at, etc  %>
+
+<section class="content">
+  <%== article.processed_content %>
+</section>
+
+<% if (forum = article.config.disqus_forum) %>
+<section class="comments">
+  <div id="disqus_thread"></div>
+  <script type="text/javascript" src="//disqus.com/forums/<%= forum %>/embed.js"></script>
+  <noscript><a href="//<%= forum %>.disqus.com/?url=ref">See Disqus discussions</a></noscript>
+  <a href="//disqus.com" class="dsq-brlink">Powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+<% end %>

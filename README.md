@@ -1,18 +1,18 @@
 # LightBlog
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/light_blog`. To experiment with that code, run `bin/console` for an interactive prompt.
+LightBlog is a Roda app that you can mount on any Rack application, such as Rails, Sinatra or Roda
+itself. It doesn't rely on a database and requires minimal resources to run.
 
-TODO: Delete this and the text above, and describe your gem
+Articles are written in Markdown and contain a header specified with the YAML language,
+containing its details such as date, title, and tags.
+
+It's possible to specify the template for the articles and override the 404 and 500 handlers.
 
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
 
     $ bundle add light_blog
-
-If bundler is not being used to manage dependencies, install the gem by executing:
-
-    $ gem install light_blog
 
 ## Usage
 
@@ -26,7 +26,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/light_blog.
+Bug reports and pull requests are welcome on GitLab at https://gitlab.com/rr.rosas/light\_blog.
 
 ## License
 

@@ -1,0 +1,46 @@
+html, body { background-color: white }
+body {
+  margin: 0 auto;
+  font-family: Verdana, Arial;
+  line-height: 1.3;
+  padding: 1em;
+  text-align: justify;
+}
+footer, section, article, aside { display: block; }
+
+body > section {
+  margin-left: 10em;
+  padding: 1em;
+}
+
+a { color: #b83000; }
+h1 a {
+  color: black;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+code {
+  font-family: Courier, mono;
+}
+blockquote {
+  font-style: italic;
+}
+
+body > footer {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+  margin-left: 9em;
+}
+
+.highlighted-code {
+  overflow: auto;
+  font-size: 10px;
+}
+
+.highlighted-code pre { margin: 0; }
+.highlighted-code tr { line-height: 1.1; }
+
+#main img { margin: 0 1em; }

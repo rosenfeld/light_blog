@@ -1,4 +1,5 @@
 AllCops:
+  NewCops: enable
   TargetRubyVersion: 2.6
 
 Style/StringLiterals:
@@ -11,3 +12,10 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+
+Security/Eval:
+  Enabled: false
+
+require:
+  - rubocop-rake
+  - rubocop-rspec

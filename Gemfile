@@ -5,8 +5,11 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in light_blog.gemspec
 gemspec
 
-gem "rake", "~> 13.0"
+gem "rake"
 
-gem "rspec", "~> 3.0"
+gem "rack-test"
+gem "rspec"
 
-gem "rubocop", "~> 1.21"
+gem "rubocop"
+gem "rubocop-rake"
+gem "rubocop-rspec"
