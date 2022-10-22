@@ -9,15 +9,17 @@ module LightBlog
                 :version_path, :watch_for_changes, :articles_glob, :date_format, :rouge_theme,
                 :views_static_path, :articles_static_path,
                 :views_static_mount_path, :articles_static_mount_path,
-                :base_mount_path, :keep_article_path, :allow_erb_processing, :title,
-                :disqus_forum
+                :base_mount_path, :keep_article_path, :allow_erb_processing,
+                :id, :title, :author, :about, :disqus_forum, :root_url
 
     def initialize(options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       @keep_article_path = boolean_option options, :keep_article_path, false
       @allow_erb_processing = boolean_option options, :allow_erb_processing, true
-      @articles_path = File.expand_path(options[:articles_path])
+      @articles_path = File.expand_path(options[:articles_path] || "articles")
       @title = options[:title] || "LightBlog"
+      @author = options[:author]
       @layout = options[:layout]
+      @about = options[:about]
       @not_found_app = options[:not_found_app]
       @error_handler_app = options[:error_handler_app]
       @views_path = options[:views_path] || VIEWS_PATH
@@ -34,6 +36,7 @@ module LightBlog
       @articles_static_mount_path = options[:articles_static_mount_path] || "static"
       @base_mount_path = options[:base_mount_path] || "/"
       @disqus_forum = options[:disqus_forum]
+      @root_url = options[:root_url]
 
       validate_config!
       watch_for_changes! if @watch_for_changes

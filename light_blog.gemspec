@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "rdiscount" # Markdown processor
   spec.add_dependency "roda"
   spec.add_dependency "rouge" # code highlighting
+  spec.add_dependency "rss" # to generate the Atom feed
   spec.add_dependency "tilt"
   spec.add_dependency "yaml" # to load articles' headers
   # Uncomment to register a new dependency of your gem

@@ -7,12 +7,13 @@ require "rdiscount"
 require "rouge"
 
 require_relative "content_processor"
+require_relative "rouge_formatter"
 
 module LightBlog
   # represents an article
   class Article
     attr_reader :config, :title, :created_at, :updated_at, :tags, :yaml, :filename, :slug,
-                :process_erb, :path
+                :process_erb, :path, :summary
 
     def initialize(config, filename)
       @config = config
@@ -54,6 +55,7 @@ module LightBlog
       @updated_at = parse_date! @yaml["updated_at"]
       @tags = filter_valid_tags(@yaml["tags"] || [])
       @process_erb = @yaml["process_erb"] || false
+      @summary = parse_date! @yaml["summary"]
 
       raise InvalidArticle, "Article must have title and created_at: #{filename}" unless @title && @created_at
     end
@@ -87,11 +89,20 @@ module LightBlog
     def highlight_code(language, source)
       # formatted = CodeRay.scan(source, language).div(line_numbers: :table)
       theme = Rouge::Theme.find(config.rouge_theme)
+      # table_formatter = Rouge::Formatters::HTMLLineTable.new(formatter)
+      # the HTMLLineTable formatter generates invalid XHTML (span inside pre elements),
+      # so we used the same idea, but removing the pre tags and replacing with the
+      # "white-space: pre" styling:
       formatter = Rouge::Formatters::HTMLInline.new(theme)
-      table_formatter = Rouge::Formatters::HTMLLineTable.new(formatter)
+      table_formatter = rouge_formatter.new(formatter)
       lexer = Rouge::Lexer.find(language) || Rouge::Lexers::PlainText
       formatted = table_formatter.format(lexer.lex(source))
       %(<div class="highlighted-code">#{formatted}</div>)
+    end
+
+    # make it easier to override the formatter:
+    def rouge_formatter
+      RougeFormatter
     end
   end
 end
