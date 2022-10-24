@@ -15,6 +15,10 @@ module LightBlog
       refresh!
     end
 
+    def sorted_tags
+      tags.to_a.sort
+    end
+
     def refresh!
       @article_by_slug = {}
       @tags = Set.new
