@@ -16,6 +16,10 @@ Layout/LineLength:
 Security/Eval:
   Enabled: false
 
+# not a Rails project
+RSpec/Rails:
+  Enabled: false
+
 require:
   - rubocop-rake
   - rubocop-rspec
