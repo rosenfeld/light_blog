@@ -85,7 +85,7 @@ module LightBlog
 
           collection.tags.each do |tag|
             articles = collection.filter(tag)
-            on(tag) do
+            r.on(tag) do
               @tag = tag
               r.root do
                 view "index", locals: { articles: articles }
