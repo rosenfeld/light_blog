@@ -44,6 +44,7 @@ module LightBlog
 
     def on_version_update(&block)
       raise "Missing block on on_version_update" unless block_given?
+
       @on_version_update = block
     end
 

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require "roda"
-require "rss"
 require_relative "articles_collection"
+require_relative "feeds_renderer"
 
 # - Configure error and not_found handlers support
 # - asset_path/static_path in markdown article
-# - add default views
 # - add task to copy default views
 # - add task to create new article
 # - add atom / feeds support
@@ -61,15 +60,15 @@ module LightBlog
           config.articles_static_mount_path => config.articles_static_path }.compact
     end
 
-    def config
-      self.class.config
-    end
-
     def self.setup_routes # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       collection = @collection
       paths = @paths
-      route do |r|
-        r.on(paths) { |path| puts "multi_public", path; r.multi_public path } unless paths.empty?
+      route do |r| # rubocop:disable Metrics/BlockLength
+        unless paths.empty?
+          r.on(paths) do |path|
+            r.multi_public path
+          end
+        end
 
         r.root do
           view "index", locals: { articles: collection.articles }
@@ -113,38 +112,12 @@ module LightBlog
 
     def render_feeds
       articles = collection.filter(@tag || "")
-      RSS::Maker.make("atom") do |maker|
-        setup_feeds_info maker
-        add_articles_to_feed(articles, maker)
-      end.to_s
-    end
-
-    def setup_feeds_info(maker)
-      maker.channel.author = config.author || "Anonymous"
-      maker.channel.updated = File.mtime(config.version_path).to_s
-      maker.channel.about = config.about if config.about
-      maker.channel.title = config.title
-      maker.channel.id = config.id || config.title
-    end
-
-    def add_articles_to_feed(articles, maker)
-      root_url = config.root_url || request.base_url
-      articles.each do |article|
-        maker.items.new_item do |item|
-          item.link = [root_url, article.path].join("")
-          item.title = article.title
-          item.updated = (article.updated_at || article.created_at).to_s
-          item.summary = article.summary if article.summary
-          item.id = article.slug
-          item.content.type = "xhtml"
-          item.content.xml = article.processed_content
-        end
-      end
+      FeedsRenderer.new.render(articles, config, request.base_url)
     end
 
     def atom_discovery_path
       path = @tag ? "tags/#{@tag}/atom" : "atom"
-      [config.base_mount_path, path].join("")
+      [config.base_mount_path, path].join
     end
 
     def collection
