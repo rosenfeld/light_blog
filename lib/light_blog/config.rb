@@ -23,7 +23,8 @@ module LightBlog
       @not_found_app = options[:not_found_app]
       @error_handler_app = options[:error_handler_app]
       @views_path = options[:views_path] || VIEWS_PATH
-      @version_path = options[:version_path] || File.join(articles_path, "version")
+      # we use realpath so that symlinks also work and we can detect changes to version with Listen:
+      @version_path = File.realpath(options[:version_path] || File.join(articles_path, "version"))
       @watch_for_changes = options[:watch_for_changes]
       @articles_glob = File.join(articles_path, options[:articles_glob] || "**/*.md")
       @date_format = options[:date_format] || "%Y-%m-%d"
