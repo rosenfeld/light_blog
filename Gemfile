@@ -9,6 +9,7 @@ gem "rake"
 
 gem "rack-test"
 gem "rspec"
+gem "rspec-html-matchers"
 
 gem "rubocop"
 gem "rubocop-rake"
