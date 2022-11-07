@@ -26,7 +26,9 @@ module LightBlog
     plugin :error_handler
 
     error do |e|
-      "Oh No!\n\n#{e.message}<br/><br/>\n\n#{e.backtrace.join("<br/>\n")}"
+      # TODO: allow error handling and not found to be overriden
+      #"Oh No!\n\n#{e.message}<br/><br/>\n\n#{e.backtrace.join("<br/>\n")}"
+      render '500'
     end
 
     def self.config
