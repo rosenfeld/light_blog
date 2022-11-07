@@ -10,7 +10,8 @@ module LightBlog
                 :views_static_path, :articles_static_path,
                 :views_static_mount_path, :articles_static_mount_path,
                 :base_mount_path, :keep_article_path, :allow_erb_processing,
-                :id, :title, :author, :about, :disqus_forum, :root_url
+                :id, :title, :author, :about, :disqus_forum, :root_url,
+                :google_analytics_tag
 
     def initialize(options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       @keep_article_path = boolean_option options, :keep_article_path, false
@@ -38,6 +39,7 @@ module LightBlog
       @base_mount_path = options[:base_mount_path] || "/"
       @disqus_forum = options[:disqus_forum]
       @root_url = options[:root_url]
+      @google_analytics_tag = options[:google_analytics_tag]
 
       validate_config!
       watch_for_changes! if @watch_for_changes

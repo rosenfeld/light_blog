@@ -2,17 +2,25 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title><%= config.title %></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@2.1.0/build/pure-min.css" integrity="sha384-yHIFVG6ClnONEA5yB5DJXfW2/KC173DIQrYoZMEtBvGzmf0PKiGyNEqe9N6BNDBH" crossorigin="anonymous">
     <% static_path = [config.base_mount_path, config.views_static_mount_path].join("") %>
     <link rel="stylesheet" href="<%= static_path %>/layout.css">
     <link rel="stylesheet" href="<%= static_path %>/menu.css">
     <link rel="stylesheet" media="print" href="<%= static_path %>/layout-print.css">
     <link rel="alternate" type="application/atom+xml" href="<%= atom_discovery_path %>" />
-    <%#= auto_discovery_link_tag :atom, main_feed_path,
-                                :title => 'Rodrigo Rosenfeld Rosas' %>
-    <%#= javascript_include_tag '//www.google-analytics.com/ga.js' if Rails.env.production? %>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title><%= config.title %></title>
+    <% if config.google_analytics_tag %>
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=<%= config.google_analytics_tag %>"></script>
+      <script>
+          window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+          gtag('config', '<%= config.google_analytics_tag %>');
+      </script>
+    <% end %>
   </head>
   <body>
     <div id=layout>
