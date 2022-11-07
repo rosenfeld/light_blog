@@ -1,6 +1,6 @@
 ---
 title: Blazing Code
-created_at: "2022-06-13"
+created_at: "2022-06-13 13:05"
 updated_at:
 tags: ["sample", "coding"]
 

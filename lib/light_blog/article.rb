@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "date"
+require "time"
 require "pathname"
 require "yaml"
 require "rdiscount"
@@ -66,7 +66,7 @@ module LightBlog
     end
 
     def parse_date!(strdate)
-      Date.strptime strdate, config.date_format
+      Time.strptime strdate, config.date_format
     rescue StandardError
       nil
     end

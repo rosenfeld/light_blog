@@ -28,7 +28,7 @@ module LightBlog
       @version_path = File.realpath(options[:version_path] || File.join(articles_path, "version"))
       @watch_for_changes = options[:watch_for_changes]
       @articles_glob = File.join(articles_path, options[:articles_glob] || "**/*.md")
-      @date_format = options[:date_format] || "%Y-%m-%d"
+      @date_format = options[:date_format] || "%Y-%m-%d %H:%M"
       @rouge_theme = options[:rouge_theme] || "base16"
       @views_static_path = valid_path(options[:views_static_path] ||
                                       File.join(views_path, "static"))

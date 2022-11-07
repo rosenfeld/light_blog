@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "roda"
+require "time"
 require_relative "articles_collection"
 require_relative "feeds_renderer"
 
@@ -25,10 +26,10 @@ module LightBlog
     plugin :empty_root
     plugin :error_handler
 
-    error do |e|
+    error do |_e|
       # TODO: allow error handling and not found to be overriden
-      #"Oh No!\n\n#{e.message}<br/><br/>\n\n#{e.backtrace.join("<br/>\n")}"
-      render '500'
+      # "Oh No!\n\n#{e.message}<br/><br/>\n\n#{e.backtrace.join("<br/>\n")}"
+      render "500"
     end
 
     def self.config
@@ -108,6 +109,11 @@ module LightBlog
         end
         nil
       end
+    end
+
+    def format_time(time)
+      # TODO: replace with I18n.localize
+      time.strftime(config.date_format)
     end
 
     protected

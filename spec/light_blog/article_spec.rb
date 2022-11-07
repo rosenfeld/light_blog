@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "fixtures/articles/path"
+require "time"
 
 RSpec.describe LightBlog::Article do
   let(:config) do
@@ -8,7 +9,7 @@ RSpec.describe LightBlog::Article do
   end
   let(:config_pt_br) do
     LightBlog::Config.new articles_path: FIXTURE_ARTICLES_PATH.sub("articles", "articles2"),
-                          date_format: "%d/%m/%Y"
+                          date_format: "%d/%m/%Y %H:%M"
   end
   let(:article) do
     described_class.new(config, File.join(config.articles_path, "sample.md"))
@@ -23,11 +24,11 @@ RSpec.describe LightBlog::Article do
   it "extracts title, created_at, updated_at and tags from header" do
     # the "inv@lid" tag is ignored
     expect([article.title, article.created_at, article.updated_at, article.tags, article.slug])
-      .to eq ["My Article Title", Date.new(2022, 10, 10), nil, %w[sample awesome], "sample"]
+      .to eq ["My Article Title", Time.new(2022, 10, 10, 12, 0), nil, %w[sample awesome], "sample"]
   end
 
   it "uses the date_format setting to parse the dates" do
-    expect(article_pt_br.created_at).to eq Date.new(2022, 5, 20)
+    expect(article_pt_br.created_at).to eq Time.new(2022, 5, 20, 18, 45)
   end
 
   it "raises InvalidArticle when title or created_at is missing" do

@@ -1,6 +1,6 @@
 ---
 title: My Article Title
-created_at: "2022-10-10"
+created_at: "2022-10-10 12:00"
 updated_at:
 tags: ["sample", "awesome", "inv@lid"]
 

@@ -1,5 +1,6 @@
 <h1><%= article.title %></h1>
-<div><%= article.created_at %> <%= "last updated at #{ article.updated_at }" if article.updated_at %></div>
+<div><%= format_time article.created_at %>
+  <%= "last updated at #{ format_time article.updated_at }" if article.updated_at %></div>
 
 <%# TODO: add support for localization: l article.created_at, etc  %>
 
