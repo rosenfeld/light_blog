@@ -17,4 +17,9 @@ module LightBlog
       define_singleton_method(:config) { cfg }
     end.setup
   end
+
+  def self.inject_rake_tasks(config, rake_context, namespace: :article, task_name: :new_article)
+    require_relative "light_blog/rake_tasks_injector"
+    RakeTasksInjector.new(config, rake_context, namespace: namespace, task_name: task_name).inject
+  end
 end

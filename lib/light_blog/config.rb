@@ -6,7 +6,8 @@ module LightBlog
   # Configuration for the Roda app
   class Config
     attr_reader :articles_path, :views_path, :layout, :not_found_app, :error_handler_app,
-                :version_path, :watch_for_changes, :articles_glob, :date_format, :rouge_theme,
+                :version_path, :watch_for_changes, :article_file_extension,
+                :articles_glob, :date_format, :rouge_theme,
                 :views_static_path, :articles_static_path,
                 :views_static_mount_path, :articles_static_mount_path,
                 :base_mount_path, :keep_article_path, :allow_erb_processing,
@@ -27,7 +28,9 @@ module LightBlog
       # we use realpath so that symlinks also work and we can detect changes to version with Listen:
       @version_path = File.realpath(options[:version_path] || File.join(articles_path, "version"))
       @watch_for_changes = options[:watch_for_changes]
-      @articles_glob = File.join(articles_path, options[:articles_glob] || "**/*.md")
+      @article_file_extension = options[:article_file_extension] || ".md"
+      @articles_glob = File.join(articles_path, options[:articles_glob] ||
+                                 "**/*#{@article_file_extension}")
       @date_format = options[:date_format] || "%Y-%m-%d %H:%M"
       @rouge_theme = options[:rouge_theme] || "base16"
       @views_static_path = valid_path(options[:views_static_path] ||
