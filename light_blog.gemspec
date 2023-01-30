@@ -29,6 +29,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "erubi"
+  spec.add_dependency "i18n"
+  spec.add_dependency "rake"
   spec.add_dependency "rdiscount" # Markdown processor
   spec.add_dependency "roda"
   spec.add_dependency "rouge" # code highlighting

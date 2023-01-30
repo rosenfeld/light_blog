@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "config"
+require "i18n"
 
 module LightBlog
   # Takes care of generating rake tasks through LightBlog.inject_rake_tasks
@@ -63,8 +64,8 @@ module LightBlog
     end
 
     def slug_from_title(title, time)
-      # TODO: Improve slug for other languages than English
-      [time.strftime("%Y-%m-%d"), title.downcase.gsub(/\W/, "-")].join("-")
+      title_slug = I18n.transliterate title, replacement: "-"
+      [time.strftime("%Y-%m-%d"), title_slug.downcase.gsub(/\W/, "-")].join("-")
     end
   end
 end
