@@ -28,7 +28,7 @@ module LightBlog
 
     error do |_e|
       # TODO: allow error handling and not found to be overriden
-      # "Oh No!\n\n#{e.message}<br/><br/>\n\n#{e.backtrace.join("<br/>\n")}"
+      # "Oh No!\n\n#{_e.message}<br/><br/>\n\n#{_e.backtrace.join("<br/>\n")}"
       render "500"
     end
 
@@ -67,6 +67,8 @@ module LightBlog
       collection = @collection
       paths = @paths
       route do |r| # rubocop:disable Metrics/BlockLength
+        I18n.locale = config.locales.first
+
         unless paths.empty?
           r.on(paths) do |path|
             r.multi_public path

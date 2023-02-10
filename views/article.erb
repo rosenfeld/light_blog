@@ -1,8 +1,7 @@
 <h1><%= article.title %></h1>
 <div><%= format_time article.created_at %>
-  <%= "last updated at #{ format_time article.updated_at }" if article.updated_at %></div>
-
-<%# TODO: add support for localization: l article.created_at, etc  %>
+  <%= "(#{I18n.t(:last_updated_at)} #{ format_time article.updated_at })" if article.updated_at %>
+</div>
 
 <section class="content">
   <%== article.processed_content %>
@@ -12,7 +11,11 @@
 <section class="comments">
   <div id="disqus_thread"></div>
   <script type="text/javascript" src="//disqus.com/forums/<%= forum %>/embed.js"></script>
-  <noscript><a href="//<%= forum %>.disqus.com/?url=ref">See Disqus discussions</a></noscript>
-  <a href="//disqus.com" class="dsq-brlink">Powered by <span class="logo-disqus">Disqus</span></a>
+  <noscript><a href="//<%= forum %>.disqus.com/?url=ref">
+    <%= I18n.t(:see_disqus_discussions) %>
+  </a></noscript>
+  <a href="//disqus.com" class="dsq-brlink">
+    <%= I18n.t(:powered_by) %>
+  <span class="logo-disqus">Disqus</span></a>
 </section>
 <% end %>

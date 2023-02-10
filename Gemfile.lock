@@ -3,7 +3,9 @@ PATH
   specs:
     light_blog (0.1.0)
       erubi
+      i18n
       listen
+      rake
       rdiscount
       roda
       rouge
@@ -15,9 +17,12 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.2)
+    concurrent-ruby (1.2.0)
     diff-lcs (1.5.0)
     erubi (1.11.0)
     ffi (1.15.5)
+    i18n (1.12.0)
+      concurrent-ruby (~> 1.0)
     json (2.6.2)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
