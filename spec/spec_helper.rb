@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "light_blog"
+LIGHT_BLOG_RUNNING_TESTS = true
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

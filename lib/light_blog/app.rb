@@ -25,11 +25,11 @@ module LightBlog
 
     plugin :empty_root
     plugin :error_handler
+    plugin :not_found
 
-    error do |_e|
-      # TODO: allow error handling and not found to be overriden
-      # "Oh No!\n\n#{_e.message}<br/><br/>\n\n#{_e.backtrace.join("<br/>\n")}"
-      render "500"
+    error do |e|
+      # just in case something goes wrong before we setup the final error handler:
+      "Oh No!\n\n#{e.message}<br/><br/>\n\n#{e.backtrace.join("<br/>\n")}"
     end
 
     def self.config
@@ -45,7 +45,9 @@ module LightBlog
       setup_routes if reload_routes
     end
 
-    def self.setup
+    def self.setup # rubocop:disable Metrics/AbcSize
+      error { |e| config.error_handler_app.call self, e }
+      not_found { config.not_found_app.call self }
       refresh_articles reload_routes: false
       plugin :render, views: config.views_path, escape: true,
                       layout_opts: { locals: { collection: @collection, config: config } }
@@ -109,6 +111,8 @@ module LightBlog
             view "article", locals: { article: article }
           end
         end
+
+        r.get("raise") { raise "error" } if defined?(::LIGHT_BLOG_RUNNING_TESTS)
         nil
       end
     end

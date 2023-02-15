@@ -23,8 +23,8 @@ module LightBlog
       @author = options[:author]
       @layout = options[:layout]
       @about = options[:about]
-      @not_found_app = options[:not_found_app]
-      @error_handler_app = options[:error_handler_app]
+      @not_found_app = options[:not_found_app] || ->(app) { app.render "404" }
+      @error_handler_app = options[:error_handler_app] || ->(app, _e) { app.render "500" }
       @views_path = options[:views_path] || VIEWS_PATH
       # we use realpath so that symlinks also work and we can detect changes to version with Listen:
       @version_path = File.realpath(options[:version_path] || File.join(articles_path, "version"))
