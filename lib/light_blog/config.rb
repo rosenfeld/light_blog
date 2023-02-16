@@ -13,7 +13,8 @@ module LightBlog
                 :views_static_mount_path, :articles_static_mount_path,
                 :base_mount_path, :keep_article_path, :allow_erb_processing,
                 :id, :title, :author, :about, :disqus_forum, :root_url,
-                :google_analytics_tag, :locales, :i18n_load_path, :i18n_fallback_to_en
+                :google_analytics_tag, :locales, :i18n_load_path, :i18n_fallback_to_en,
+                :create_articles_store_if_missing
 
     def initialize(options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       @keep_article_path = boolean_option options, :keep_article_path, false
@@ -27,7 +28,9 @@ module LightBlog
       @error_handler_app = options[:error_handler_app] || ->(app, _e) { app.render "500" }
       @views_path = options[:views_path] || VIEWS_PATH
       # we use realpath so that symlinks also work and we can detect changes to version with Listen:
-      @version_path = File.realpath(options[:version_path] || File.join(articles_path, "version"))
+      @version_path = options[:version_path] || File.join(articles_path, "version")
+      ensure_repository_exists! unless [version_path, articles_path].all? { |fn| File.exist? fn }
+      @version_path = File.realpath(version_path)
       @watch_for_changes = options[:watch_for_changes]
       @article_file_extension = options[:article_file_extension] || ".md"
       @articles_glob = File.join(articles_path, options[:articles_glob] ||
@@ -46,12 +49,14 @@ module LightBlog
       @google_analytics_tag = options[:google_analytics_tag]
       @locales = options[:locales] || [:en]
       @i18n_load_path = options[:i18n_load_path] || []
-      @i18n_fallback_to_en = options[:i18n_fallback_to_en]
-      @i18n_fallback_to_en = true if @i18n_fallback_to_en.nil?
+      @i18n_fallback_to_en = boolean_option options, :i18n_fallback_to_en, true
 
       I18n.available_locales = @locales
       I18n.load_path = [File.expand_path("../../i18n/en.yml", __dir__)] + @i18n_load_path
       I18n::Backend::Simple.include(I18n::Backend::Fallbacks) if @i18n_fallback_to_en
+
+      @create_articles_store_if_missing =
+        boolean_option options, :create_articles_store_if_missing, true
 
       validate_config!
       watch_for_changes! if @watch_for_changes
@@ -84,6 +89,16 @@ module LightBlog
     def validate_config!
       validate_versions_path_is_readable!
       validate_listen_gem_is_installed! if watch_for_changes
+    end
+
+    def ensure_repository_exists!
+      require "fileutils"
+      FileUtils.mkdir_p articles_path
+      return if File.exist?(version_path)
+
+      dir = File.dirname version_path
+      FileUtils.mkdir_p dir
+      File.write version_path, "1"
     end
 
     def validate_versions_path_is_readable!

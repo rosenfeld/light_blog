@@ -8,9 +8,7 @@ require_relative "light_blog/app"
 module LightBlog
   class Error < StandardError; end
 
-  def self.create_app(config)
-    raise ":articles_path is mandatory" unless config.include?(:articles_path)
-
+  def self.create_app(config = {})
     cfg = Config.new(config)
 
     Class.new(App) do
@@ -18,8 +16,9 @@ module LightBlog
     end.setup
   end
 
-  def self.inject_rake_tasks(config, rake_context, namespace: :article, task_name: :new_article)
+  def self.inject_rake_tasks(rake_context, config = {},
+                             namespace: :article, task_name: :new_article)
     require_relative "light_blog/rake_tasks_injector"
-    RakeTasksInjector.new(config, rake_context, namespace: namespace, task_name: task_name).inject
+    RakeTasksInjector.new(rake_context, config, namespace: namespace, task_name: task_name).inject
   end
 end

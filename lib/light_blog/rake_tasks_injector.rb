@@ -8,7 +8,7 @@ module LightBlog
   class RakeTasksInjector
     attr_reader :config, :rake_context, :namespace, :task_name
 
-    def initialize(config, rake_context, namespace: :article, task_name: :new_article)
+    def initialize(rake_context, config = {}, namespace: :article, task_name: :new_article)
       config = Config.new(config) if config.is_a?(Hash)
       @config = config
       @rake_context = rake_context
@@ -49,6 +49,8 @@ module LightBlog
                   "updated_at" => nil }.to_yaml
       article << "\nArticle content here."
       File.write path, article
+      version = File.read(@config.version_path).to_i
+      File.write @config.version_path, (version + 1).to_s
       puts "Crated article at #{path}"
     end
 
