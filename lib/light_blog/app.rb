@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
+require "i18n"
 require "roda"
 require "time"
 require_relative "articles_collection"
 require_relative "feeds_renderer"
 
-# - Configure error and not_found handlers support
 # - asset_path/static_path in markdown article
 # - add task to copy default views
-# - add task to create new article
-# - add atom / feeds support
-# - add support for Localization (I18n)
-# - add a README
 # - add support for Google Analytics
 # - add rack/test tests
 # - setup circle/ci integration
@@ -41,7 +37,7 @@ module LightBlog
     end
 
     def self.refresh_articles(reload_routes: true)
-      (@collection = ArticlesCollection.new(config)).refresh!
+      @collection = ArticlesCollection.new(config)
       setup_routes if reload_routes
     end
 
@@ -49,8 +45,7 @@ module LightBlog
       error { |e| config.error_handler_app.call self, e }
       not_found { config.not_found_app.call self }
       refresh_articles reload_routes: false
-      plugin :render, views: config.views_path, escape: true,
-                      layout_opts: { locals: { collection: @collection, config: config } }
+      plugin :render, views: config.views_path, escape: true
       plugin :multi_public, public_paths unless public_paths(refresh: true).empty?
       @paths = public_paths.keys
       config.on_version_update { refresh_articles }
@@ -66,7 +61,6 @@ module LightBlog
     end
 
     def self.setup_routes # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-      collection = @collection
       paths = @paths
       route do |r| # rubocop:disable Metrics/BlockLength
         I18n.locale = config.locales.first
@@ -118,7 +112,9 @@ module LightBlog
     end
 
     def format_time(time)
-      # TODO: replace with I18n.localize
+      formatted = I18n.l time
+      return formatted unless formatted.start_with? "translation missing:"
+
       time.strftime(config.date_format)
     end
 

@@ -15,6 +15,10 @@ Install the gem and add to the application's Gemfile by executing:
 
     $ bundle add light_blog
 
+In order to allow the app to watch for changes, also add the listen gem:
+
+    $ bundle add listen
+
 ## Usage
 
 Create a config.ru file like this:
@@ -38,18 +42,14 @@ LightBlog.inject_rake_tasks self
 
 Generate a new file with this rake command:
 
-```bash
-bundle exec rake article:new_article
-```
+    $ bundle exec rake article:new_article
 
 Type the title of the article and you can finally edit the generated article.
 
 Then run the application (I'll use puma as an example):
 
-```bash
-bundle add puma
-bundle exec puma -p 4000
-```
+    $ bundle add puma
+    $ bundle exec puma -p 4000
 
 Then simply navigate to [http://localhost:4000](http://localhost:4000) to see your article
 listed there. If you add tags to your article, the tags will be displayed in the left menu.

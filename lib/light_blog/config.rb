@@ -5,7 +5,7 @@ require "i18n"
 
 module LightBlog
   # Configuration for the Roda app
-  class Config
+  class Config # rubocop:disable Metrics/ClassLength
     attr_reader :articles_path, :views_path, :layout, :not_found_app, :error_handler_app,
                 :version_path, :watch_for_changes, :article_file_extension,
                 :articles_glob, :date_format, :rouge_theme,
@@ -15,23 +15,28 @@ module LightBlog
                 :id, :title, :author, :about, :disqus_forum, :root_url,
                 :google_analytics_tag, :locales, :i18n_load_path, :i18n_fallback_to_en,
                 :create_articles_store_if_missing
+    attr_accessor :log_errors
 
     def initialize(options = {}) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       @keep_article_path = boolean_option options, :keep_article_path, false
       @allow_erb_processing = boolean_option options, :allow_erb_processing, true
+      @log_errors = boolean_option options, :log_errors, true
       @articles_path = File.expand_path(options[:articles_path] || "articles")
       @title = options[:title] || "LightBlog"
       @author = options[:author]
       @layout = options[:layout]
       @about = options[:about]
       @not_found_app = options[:not_found_app] || ->(app) { app.render "404" }
-      @error_handler_app = options[:error_handler_app] || ->(app, _e) { app.render "500" }
+      @error_handler_app = options[:error_handler_app] || lambda do |app, e|
+        puts "Error: #{e.message}\n\n#{e.backtrace.join("<br/>\n")}" if log_errors
+        app.render "500"
+      end
       @views_path = options[:views_path] || VIEWS_PATH
       # we use realpath so that symlinks also work and we can detect changes to version with Listen:
       @version_path = options[:version_path] || File.join(articles_path, "version")
       ensure_repository_exists! unless [version_path, articles_path].all? { |fn| File.exist? fn }
       @version_path = File.realpath(version_path)
-      @watch_for_changes = options[:watch_for_changes]
+      extract_watch_for_changes_option options[:watch_for_changes]
       @article_file_extension = options[:article_file_extension] || ".md"
       @articles_glob = File.join(articles_path, options[:articles_glob] ||
                                  "**/*#{@article_file_extension}")
@@ -105,6 +110,16 @@ module LightBlog
       File.read(version_path)
     rescue StandardError
       raise InvalidConfigError, "The version file is required to be readable: #{version_path}"
+    end
+
+    def extract_watch_for_changes_option(watch_for_changes)
+      @watch_for_changes = watch_for_changes
+      return unless @watch_for_changes.nil?
+
+      require "listen"
+      @watch_for_changes = true
+    rescue LoadError
+      @watch_for_changes = false # silence rubocop warning
     end
 
     def validate_listen_gem_is_installed!
