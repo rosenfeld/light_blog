@@ -16,9 +16,16 @@ module LightBlog
     end.setup
   end
 
-  def self.inject_rake_tasks(rake_context, config = {},
-                             namespace: :article, task_name: :new_article)
+  def self.inject_rake_tasks(rake_context, config = {}, # rubocop:disable Metrics/ParameterLists
+                             namespace: :article, new_article_task_name: :new_article,
+                             generate_views_task_name: :generate_views,
+                             generated_views_path: "light_blog_views",
+                             new_article_task_only: false)
     require_relative "light_blog/rake_tasks_injector"
-    RakeTasksInjector.new(rake_context, config, namespace: namespace, task_name: task_name).inject
+    RakeTasksInjector.new(rake_context, config, namespace: namespace,
+                                                new_article_task_name: new_article_task_name,
+                                                generate_views_task_name: generate_views_task_name,
+                                                generated_views_path: generated_views_path,
+                                                new_article_task_only: new_article_task_only).inject
   end
 end

@@ -2,27 +2,46 @@
 
 require_relative "config"
 require "i18n"
+require "fileutils"
 
 module LightBlog
   # Takes care of generating rake tasks through LightBlog.inject_rake_tasks
   class RakeTasksInjector
-    attr_reader :config, :rake_context, :namespace, :task_name
+    attr_reader :config, :rake_context, :namespace, :new_article_task_name,
+                :generate_views_task_name, :generated_views_path, :new_article_task_only
 
-    def initialize(rake_context, config = {}, namespace: :article, task_name: :new_article)
+    def initialize(rake_context, config = {}, # rubocop:disable Metrics/ParameterLists
+                   namespace: :article,
+                   new_article_task_name: :new_article,
+                   generate_views_task_name: :generate_views,
+                   generated_views_path: "light_blog_views",
+                   new_article_task_only: false)
       config = Config.new(config) if config.is_a?(Hash)
       @config = config
       @rake_context = rake_context
       @namespace = namespace
-      @task_name = task_name
+      @new_article_task_name = new_article_task_name
+      @generate_views_task_name = generate_views_task_name
+      @generated_views_path = generated_views_path
+      @new_article_task_only = new_article_task_only
     end
 
-    def inject
+    def inject # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       injector = self
       @rake_context.instance_eval do
         namespace injector.namespace do
           desc "Create a new article"
-          task injector.task_name do
+          task injector.new_article_task_name do
             injector.ask_for_title_and_create_article
+          end
+
+          next if injector.new_article_task_only
+
+          desc "Copy default views to #{injector.generated_views_path}"
+          task injector.generate_views_task_name, :force do |_t, args|
+            force_arg = args[:force]&.downcase
+            force = %w[true yes 1 force].any? { |o| force_arg == o } if force_arg
+            injector.copy_views force
           end
         end
       end
@@ -36,6 +55,21 @@ module LightBlog
         return
       end
       create_article title
+    end
+
+    # make it easier to view the backtrace when an error occurs
+    def inspect
+      "LightBlog Task Injector"
+    end
+
+    VIEWS_FILES = %w[404.erb 500.erb article.erb index.erb layout.erb tags.erb
+                     static/layout.css static/layout-print.css static/menu.css].freeze
+    def copy_views(force)
+      FileUtils.rm_rf generated_views_path if force
+      abort_copy_views! if File.exist?(generated_views_path)
+      FileUtils.mkdir_p File.join(generated_views_path, "static")
+      copy_views_files File.expand_path "../../views", __dir__
+      puts "Default views have been copied to #{generated_views_path}"
     end
 
     private
@@ -68,6 +102,19 @@ module LightBlog
     def slug_from_title(title, time)
       title_slug = I18n.transliterate title, replacement: "-"
       [time.strftime("%Y-%m-%d"), title_slug.downcase.gsub(/\W/, "-")].join("-")
+    end
+
+    def abort_copy_views!
+      puts "#{generate_views_task_name} already exists, aborting. If you want " \
+           "to override it, call rake " \
+           "#{namespace}:#{generate_views_task_name}[force]"
+      exit 1
+    end
+
+    def copy_views_files(srcdir)
+      VIEWS_FILES.each do |fn|
+        FileUtils.cp File.join(srcdir, fn), File.join(generated_views_path, fn)
+      end
     end
   end
 end
