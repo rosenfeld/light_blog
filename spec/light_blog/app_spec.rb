@@ -28,6 +28,14 @@ RSpec.describe LightBlog::App do
     @app ||= LightBlog.create_app config
   end
 
+  def silence_errors
+    log_errors = app.config.log_errors
+    app.config.log_errors = false
+    yield
+  ensure
+    app.config.log_errors = log_errors
+  end
+
   context "when root path is requested (listing)" do
     let(:response) { get "" }
 
@@ -66,9 +74,7 @@ RSpec.describe LightBlog::App do
     end
 
     it "displays an Error page when an error occurs" do
-      app.config.log_errors = false
-      response = get "raise"
-      app.config.log_errors = true
+      response = silence_errors { get "raise" }
       expect(response.body).to include "500"
     end
   end
@@ -96,9 +102,7 @@ RSpec.describe LightBlog::App do
     it "allows the error handler to be overriden" do
       @app = LightBlog.create_app config.merge(title: "My App",
                                                error_handler_app: error_handler_app)
-      app.config.log_errors = false
-      response = get "raise"
-      app.config.log_errors = true
+      response = silence_errors { get "raise" }
       expect(response.body).to eq "[My App] overriden: error"
     end
   end
