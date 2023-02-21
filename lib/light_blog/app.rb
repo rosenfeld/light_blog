@@ -6,9 +6,8 @@ require "time"
 require_relative "articles_collection"
 require_relative "feeds_renderer"
 
+# TODO:
 # - asset_path/static_path in markdown article
-# - add task to copy default views
-# - add support for Google Analytics
 # - add rack/test tests
 # - setup circle/ci integration
 
