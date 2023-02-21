@@ -66,9 +66,35 @@ tags: ["blog", "ruby"]
 Article *content* here.
 ```
 
+## Integrating LightBlog with an existent website
+
+If you want to integrate the blog to an existing site, there are 2 easy options you might want
+to consider:
+
+* mount this Rack app on top of yours, if the main site is also written as a Rack-based app
+(such as Rails, Roda, Sinatra, whatever);
+* use a reverse proxy to do that for you (you could mount it on the /blog/ path for example or
+serve it in its own subdomain such as blog.myapp.com);
+
+The latter option would be safer as any vulnerabilities on either app wouldn't affect the other.
+
+Just be aware of the `root_url`, `base_mount_path`, `views_static_mount_path` and
+`articles_static_mount_path` options.
+
 ## Options
 
 TODO: describe the available options
+
+## Deployment
+
+It's recommended to serve the blog behind a reverse proxy such as Nginx. Besides the usual
+benefits of proxying your app, nginx could help you with:
+
+* properly dealing with caching the pages;
+* protecting against DoS and DDoS;
+* enabling HTTPS;
+
+None of those features are offered by `light_blog` out-of-the-box.
 
 ## Development
 
@@ -105,7 +131,7 @@ Enjoy!
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitLab at https://gitlab.com/rr.rosas/light\_blog.
+Bug reports and pull requests are welcome on GitLab at https://gitlab.com/rr.rosas/light_blog.
 
 ## License
 
