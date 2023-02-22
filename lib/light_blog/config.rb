@@ -6,7 +6,7 @@ require "i18n"
 module LightBlog
   # Configuration for the Roda app
   class Config # rubocop:disable Metrics/ClassLength
-    attr_reader :articles_path, :views_path, :layout, :not_found_app, :error_handler_app,
+    attr_reader :articles_path, :views_path, :not_found_app, :error_handler_app,
                 :version_path, :watch_for_changes, :article_file_extension,
                 :articles_glob, :date_format, :rouge_theme,
                 :views_static_path, :articles_static_path,
@@ -24,7 +24,6 @@ module LightBlog
       @articles_path = File.expand_path(options[:articles_path] || "articles")
       @title = options[:title] || "LightBlog"
       @author = options[:author]
-      @layout = options[:layout]
       @about = options[:about]
       @not_found_app = options[:not_found_app] || ->(app) { app.render "404" }
       @error_handler_app = options[:error_handler_app] || lambda do |app, e|
