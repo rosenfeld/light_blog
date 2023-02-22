@@ -9,6 +9,12 @@ a git repository) and no database is used by this application.
 
 It's possible to specify the template for the articles and override the 404 and 500 handlers.
 
+Comments are disabled by default but are supported out-of-the-box with
+[Disqus](https://disqus.com/) if you provide your Disqus id in the options. This is also valid
+for Google Analytics integration.
+
+Atom feeds are supported out-of-the-box.
+
 ## Installation
 
 Install the gem and add to the application's Gemfile by executing:
@@ -62,8 +68,11 @@ title: LightBlog is Great!
 created_at: 2023-02-16 17:26
 updated_at:
 tags: ["blog", "ruby"]
+process_erb: true
 
 Article *content* here.
+
+![awesome picture](<%= static_path("awesome.png") %> "Awesome Picture")
 ```
 
 ## Integrating LightBlog with an existent website
@@ -83,7 +92,63 @@ Just be aware of the `root_url`, `base_mount_path`, `views_static_mount_path` an
 
 ## Options
 
-TODO: describe the available options
+LightBlog accept many options that allow you to customize it a lot:
+
+```ruby
+LightBlog.create_app(
+  # default options:
+  title: "LightBlog",
+  id: nil, # used by the Atom feeds generation, title is used if id is nil
+  author: nil, # used by the Atom feeds generation,
+  about: nil, # used by the Atom feeds generation,
+  articles_path: "./articles",
+  views_path: LightBlog::VIEWS_PATH,
+  not_found_app: ->(app) { app.render "404" },
+  error_handler_app: lambda {|app, e|
+    puts "Error: #{e.message}\n\n#{e.backtrace.join("<br/>\n")}" if log_errors
+    app.render "500"
+  },
+  watch_for_changes: true, # false if the listen gem is not available
+  # when watch_for_changes is true, updating this file will refresh the articles collection:
+  version_path: "#{articles_path}/version",
+  article_file_extension: ".md",
+  articles_glob: "**/*#{article_file_extension}",
+  date_format: "%Y-%m-%d %H:%M",
+  rouge_theme: "base16", # rouge code highlighter theme
+  views_static_path: "#{views_path}/static", # static assets used in views
+  articles_static_path: "#{articles_path}/static", # static assets used in articles
+  views_static_mount_path: "theme", # files are served through /theme/file-path
+  articles_static_mount_path: "static",
+  base_mount_path: "/", # base path for the LightBlog app
+  disqus_forum: nil, # use your Disqus id to enable comments
+  google_analytics_tag: nil, # use your GA tag in order to integrate with Google Analytics
+  # auto-detect root_url by default.
+  # Used to generate the full link to the articles in the Atom feeds:
+  root_url: nil,
+  locales: [:en], # specify which languages to support. LightBlog uses the i18n gem
+  i18n_load_path: [], # specify where the locale YAML files are located
+  i18n_fallback_to_en: true, # should the app use the English locale when translation is missing?
+  # should LightBlog automatically create the articles store if it doesn't exist?
+  create_articles_store_if_missing: true
+)
+```
+
+The Rake tasks injector also accept some options:
+
+```ruby
+LightBlog.inject_rake_tasks(
+  date_format:  "%Y-%m-%d %H:%M",
+  articles_path: "articles",
+  version_path: "#{articles_path}/version",
+  article_file_extension: ".md",
+  namespace: :article,
+  new_article_task_name: :new_article,
+  generate_views_task_name: :generate_views,
+  generated_views_path: "light_blog_views",
+  new_article_task_only: false # should only the new_article task be supported?
+)
+```
+
 
 ## Deployment
 
