@@ -39,7 +39,8 @@ RSpec.describe LightBlog::Article do
 
   it "processes the article content with Markdown" do
     expect(article.processed_content)
-      .to eq "<h1>Take your breath</h1>\n\n<p>This is <em>mind-blowing</em>!</p>\n"
+      .to eq "<h1>Take your breath</h1>\n\n<p>This is <em>mind-blowing</em>!</p>\n\n" \
+             "<p><img src=\"/static/image.png\" title=\"Some Image\" alt=\"some image\" /></p>\n"
   end
 
   it "highlights source-code" do
