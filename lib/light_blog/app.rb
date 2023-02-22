@@ -6,8 +6,7 @@ require "time"
 require_relative "articles_collection"
 require_relative "feeds_renderer"
 
-# TODO:
-# - asset_path/static_path in markdown article
+# TODO: Fix those remaining issues:
 # - add rack/test tests
 # - setup circle/ci integration
 
