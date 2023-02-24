@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "i18n"
 require "time"
 require "pathname"
 require "yaml"
@@ -39,11 +40,16 @@ module LightBlog
     def extract_slug(slug)
       if config.keep_article_path
         slug_path = File.dirname(slug)
-        slug_name = File.basename(slug).gsub(/\W/, "_")
+        slug_name = transliterate File.basename(slug)
         slug_path == "." ? slug_name : [slug_path, slug_name].join("/")
       else
-        slug.gsub(/\W/, "_")
+        transliterate slug
       end
+    end
+
+    def transliterate(slug)
+      I18n.transliterate(slug, replacement: "_").gsub(/\W/, "_")
+          .gsub(/_+/, "_").sub(/\A_/, "").sub(/_\z/, "")
     end
 
     class InvalidArticle < StandardError; end

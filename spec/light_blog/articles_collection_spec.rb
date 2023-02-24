@@ -12,12 +12,13 @@ RSpec.describe LightBlog::ArticlesCollection do
 
   it "lists valid articles in collection sorted by created at desc, title" do
     expect(collection.articles.map(&:title))
-      .to eq ["My Article Title", "Blazing Code", "Yet Another June Article"]
+      .to eq ["My Article Title", "My Article Title No ERB", "Blazing Code",
+              "Yet Another June Article"]
   end
 
   it "allows filtering articles by tag" do
     expect(collection.filter("sample").map(&:title))
-      .to eq ["My Article Title", "Blazing Code"]
+      .to eq ["My Article Title", "My Article Title No ERB", "Blazing Code"]
   end
 
   it "returns all articles when tag passed to filter is empty" do

@@ -15,7 +15,8 @@ RSpec.describe LightBlog::Article do
     described_class.new(config, File.join(config.articles_path, "sample.md"))
   end
   let(:article_pt_br) do
-    described_class.new(config_pt_br, File.join(config_pt_br.articles_path, "sample.md"))
+    fn = "pra toda ação há uma reação!.md"
+    described_class.new(config_pt_br, File.join(config_pt_br.articles_path, fn))
   end
   let(:article_with_code) do
     described_class.new(config, File.join(config.articles_path, "sample-code.md"))
@@ -27,13 +28,19 @@ RSpec.describe LightBlog::Article do
       .to eq ["My Article Title", Time.new(2022, 10, 10, 12, 0), nil, %w[sample awesome], "sample"]
   end
 
+  it "transliterate latin chars when extracting the article slug" do
+    expect(article_pt_br.slug).to eq "pra_toda_acao_ha_uma_reacao"
+  end
+
   it "uses the date_format setting to parse the dates" do
     expect(article_pt_br.created_at).to eq Time.new(2022, 5, 20, 18, 45)
   end
 
   it "raises InvalidArticle when title or created_at is missing" do
+    # here created_at is using an unexpected date format for this config
+    fn = "pra toda ação há uma reação!.md"
     expect do
-      described_class.new(config, File.join(config_pt_br.articles_path, "sample.md"))
+      described_class.new(config, File.join(config_pt_br.articles_path, fn))
     end.to raise_error described_class::InvalidArticle
   end
 
@@ -41,6 +48,14 @@ RSpec.describe LightBlog::Article do
     expect(article.processed_content)
       .to eq "<h1>Take your breath</h1>\n\n<p>This is <em>mind-blowing</em>!</p>\n\n" \
              "<p><img src=\"/static/image.png\" title=\"Some Image\" alt=\"some image\" /></p>\n"
+  end
+
+  it "does not process ERB unless process_erb is true in the article header" do
+    article = described_class.new(config, File.join(config.articles_path, "sample_no_erb.md"))
+    expect(article.processed_content)
+      .to eq "<h1>Take your breath</h1>\n\n<p>This is <em>mind-blowing</em>!</p>\n\n" \
+             "<p><img src=\"%=%20static_path(%22image.png%22)%20%\" title=\"Some Image\" " \
+             "alt=\"some image\" /></p>\n"
   end
 
   it "highlights source-code" do
