@@ -61,7 +61,7 @@ module LightBlog
       @updated_at = parse_date! @yaml["updated_at"]
       @tags = filter_valid_tags(@yaml["tags"] || [])
       @process_erb = @yaml["process_erb"] || false
-      @summary = parse_date! @yaml["summary"]
+      @summary = @yaml["summary"]
 
       raise InvalidArticle, "Article must have title and created_at: #{filename}" unless @title && @created_at
     end
