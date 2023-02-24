@@ -24,6 +24,7 @@ module LightBlog
       @articles_path = File.expand_path(options[:articles_path] || "articles")
       @title = options[:title] || "LightBlog"
       @author = options[:author]
+      @id = options[:id]
       @about = options[:about]
       @not_found_app = options[:not_found_app] || ->(app) { app.render "404" }
       @error_handler_app = options[:error_handler_app] || lambda do |app, e|
