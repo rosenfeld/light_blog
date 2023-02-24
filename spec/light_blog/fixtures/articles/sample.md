@@ -4,6 +4,7 @@ created_at: "2022-10-10 12:00"
 updated_at:
 tags: ["sample", "awesome", "inv@lid"]
 process_erb: true
+summary: mind-blowing article
 
 # Take your breath
 
