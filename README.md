@@ -113,7 +113,7 @@ LightBlog.create_app(
   version_path: "#{articles_path}/version",
   article_file_extension: ".md",
   articles_glob: "**/*#{article_file_extension}",
-  date_format: "%Y-%m-%d %H:%M",
+  date_format: "%Y-%m-%d %H:%M", # format for the YAML header in the article
   rouge_theme: "base16", # rouge code highlighter theme
   views_static_path: "#{views_path}/static", # static assets used in views
   articles_static_path: "#{articles_path}/static", # static assets used in articles
