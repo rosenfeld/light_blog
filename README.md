@@ -196,7 +196,7 @@ Enjoy!
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitLab at https://gitlab.com/rr.rosas/light_blog.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rosenfeld/light_blog.
 
 ## License
 

@@ -9,13 +9,13 @@ Gem::Specification.new do |spec|
   spec.email = ["rr.rosas@gmail.com"]
 
   spec.summary = "Light Blog app built on top of Roda"
-  spec.homepage = "https://gitlab.com/rr.rosas/light_blog"
+  spec.homepage = "https://github.com/rosenfeld/light_blog"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "https://gitlab.com/rr.rosas/light_blog"
-  spec.metadata["changelog_uri"] = "https://gitlab.com/rr.rosas/light_blog/-/blob/master/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/rosenfeld/light_blog"
+  spec.metadata["changelog_uri"] = "https://github.com/rosenfeld/light_blog/-/blob/master/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
