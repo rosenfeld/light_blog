@@ -5,6 +5,8 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in light_blog.gemspec
 gemspec
 
+gem "nokogiri"
+
 gem "rake"
 
 gem "rack-test"

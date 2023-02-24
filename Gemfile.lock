@@ -91,6 +91,7 @@ PLATFORMS
 
 DEPENDENCIES
   light_blog!
+  nokogiri
   rack-test
   rake
   rspec
