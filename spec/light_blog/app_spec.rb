@@ -3,6 +3,7 @@
 require "nokogiri"
 require "rack/test"
 require "rspec-html-matchers"
+require_relative "fixtures/articles/path"
 
 RSpec.describe LightBlog::App do
   include Rack::Test::Methods
@@ -215,5 +216,11 @@ RSpec.describe LightBlog::App do
       expect(feed.css("> feed > entry > title").map(&:content))
         .to eq ["My Article Title", "My Article Title No ERB", "Blazing Code"]
     end
+  end
+
+  it "allows views to be overridden" do
+    views_path = File.join FIXTURE_ARTICLES_PATH, "alternative_views"
+    @app = LightBlog.create_app(config.merge(views_path: views_path))
+    expect(get("").body.strip).to eq "Overridden index"
   end
 end
