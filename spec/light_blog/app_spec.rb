@@ -124,6 +124,12 @@ RSpec.describe LightBlog::App do
       feed = Nokogiri::XML(response_body)
     end
 
+    it "lists all feeds" do
+      expect(feed.css("> feed > entry > title").map(&:content))
+        .to eq ["My Article Title", "My Article Title No ERB", "Blazing Code",
+                "Yet Another June Article"]
+    end
+
     it "provides the feeds id" do
       expect(feed.at("> feed > id").content).to eq "myblog"
     end
@@ -174,19 +180,40 @@ RSpec.describe LightBlog::App do
   context "when filtering by tags" do
     let(:expected_tags) do
       [
-        ["/blog/tags/awesome", "awesome"],
-        ["/blog/tags/coding", "coding"],
         ["/blog/tags/june", "june"],
+        ["/blog/tags/testing", "testing"],
         ["/blog/tags/sample", "sample"],
-        ["/blog/tags/testing", "testing"]
+        ["/blog/tags/coding", "coding"],
+        ["/blog/tags/awesome", "awesome"]
+      ]
+    end
+
+    let(:sample_articles) do
+      [
+        ["/blog/sample", "My Article Title"],
+        ["/blog/sample_no_erb", "My Article Title No ERB"],
+        ["/blog/sample_code", "Blazing Code"]
       ]
     end
 
     it "lists all tags at /tags" do
       response = Nokogiri::HTML(get("tags").body)
-      links = response.css("aside[id=menu] ul > li > a")
+      links = response.css("section#main > ul > li > a")
                       .map { |link| [link["href"], link.content] }
       expect(links).to eq expected_tags
+    end
+
+    it "filter articles by tag" do
+      response = Nokogiri::HTML(get("tags/sample").body)
+      links = response.css("section#main > ul > li > a")
+                      .map { |link| [link["href"], link.content] }
+      expect(links).to eq sample_articles
+    end
+
+    it "provides atom feeds specific for the tag" do
+      feed = Nokogiri::XML(get("tags/sample/atom").body)
+      expect(feed.css("> feed > entry > title").map(&:content))
+        .to eq ["My Article Title", "My Article Title No ERB", "Blazing Code"]
     end
   end
 end
