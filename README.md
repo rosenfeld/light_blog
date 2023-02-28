@@ -17,6 +17,23 @@ Atom feeds are supported out-of-the-box.
 
 ## Installation
 
+### Automatic creation of a blog app
+
+    $ light_blog new myblog
+
+This creates a very simple blog app by doing these steps:
+
+1. mkdir myblog; cd myblog
+2. git init
+3. bundle init; bundle add light\_blog puma rake listen; bundle binstubs puma rake
+4. create a sample Rakefile
+5. create a sample config.ru
+
+Follow the following topics in order to understand how to perform those steps manually
+instead.
+
+### Manual steps to integrate with `light_blog`
+
 Install the gem and add to the application's Gemfile by executing:
 
     $ bundle add light_blog
