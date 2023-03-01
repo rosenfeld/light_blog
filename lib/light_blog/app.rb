@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "i18n"
+require "rack"
 require "roda"
 require "time"
 require_relative "articles_collection"
@@ -16,6 +17,8 @@ module LightBlog
     class << self
       attr_reader :collection
     end
+
+    use Rack::ETag
 
     plugin :empty_root
     plugin :error_handler
