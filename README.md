@@ -1,4 +1,4 @@
-# LightBlog
+# LightBlog [![CircleCI](https://dl.circleci.com/status-badge/img/gh/rosenfeld/light_blog/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/rosenfeld/light_blog/tree/main)
 
 LightBlog is a Roda app that you can mount on any Rack application, such as Rails, Sinatra or
 Roda itself. It doesn't rely on a database and requires minimal resources to run.
