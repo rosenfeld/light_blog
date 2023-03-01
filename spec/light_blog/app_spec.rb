@@ -3,6 +3,7 @@
 require "nokogiri"
 require "rack/test"
 require "rspec-html-matchers"
+require "time"
 require_relative "fixtures/articles/path"
 
 RSpec.describe LightBlog::App do
@@ -165,7 +166,8 @@ RSpec.describe LightBlog::App do
     end
 
     it "includes the articles' last updated date" do
-      expect(feed.at("> feed > entry > updated").content).to eq "2022-10-10T12:00:00-03:00"
+      time = Time.parse("2022-10-10 12:00:00")
+      expect(feed.at("> feed > entry > updated").content).to eq format_time(time)
     end
 
     it "includes the articles' content" do
