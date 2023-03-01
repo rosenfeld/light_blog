@@ -100,8 +100,8 @@ module LightBlog
     end
 
     def slug_from_title(title, time)
-      title_slug = I18n.transliterate(title, replacement: "-").
-        downcase.gsub(/\W/, "-").gsub(/--/, "-").gsub(/\A-/, "").gsub(/-\z/, "")
+      title_slug = I18n.transliterate(title, replacement: "-")
+                       .downcase.gsub(/\W/, "-").gsub(/--/, "-").gsub(/\A-/, "").gsub(/-\z/, "")
       [time.strftime("%Y-%m-%d"), title_slug].join("-")
     end
 

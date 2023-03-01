@@ -4,9 +4,9 @@ require "optparse"
 options = {}
 args = OptionParser.new do |parser|
   parser.banner = "Usage: light_blog new myblog [options]"
-  parser.on("-G", "--skip-git", "Skip Git integration"){ options[:skip_git] = true }
-  parser.on("-v", "--verbose", "Verbose mode"){ options[:verbose] = true }
-  parser.on("-q", "--quiet", "Quiet mode"){ options[:quiet] = true }
+  parser.on("-G", "--skip-git", "Skip Git integration") { options[:skip_git] = true }
+  parser.on("-v", "--verbose", "Verbose mode") { options[:verbose] = true }
+  parser.on("-q", "--quiet", "Quiet mode") { options[:quiet] = true }
 end.parse!
 
 command = args.shift
@@ -17,7 +17,7 @@ end
 
 unless args.size == 1
   puts "light_blog new expects a single argument. '#{args.join " "}' is not a valid argument. " \
-    "Type light_blog -h for usage instructions."
+       "Type light_blog -h for usage instructions."
   exit 1
 end
 
@@ -35,17 +35,17 @@ bundle add light_blog puma rake listen
 bundle binstubs puma rake
 "
 
-rakefile = %q{
+rakefile = '
 require "light_blog"
 
 LightBlog.inject_rake_tasks self
-}.strip
+'.strip
 
-config_ru = %Q{
+config_ru = %(
 require "light_blog"
 
 run LightBlog.create_app
-}.strip
+).strip
 
 require "tempfile"
 
@@ -56,11 +56,14 @@ Dir.chdir target_dir do
     file.write init_script
     file.close
     verbose = options[:verbose] ? "-x" : ""
-    run = ->{ `/bin/bash #{verbose} #{file.path}` }
+    run = -> { `/bin/bash #{verbose} #{file.path}` }
     bundler_loaded = false
     begin
-      Bundler.with_unbundled_env{ bundler_loaded = true; run[] }
-    rescue
+      Bundler.with_unbundled_env do
+        bundler_loaded = true
+        run[]
+      end
+    rescue StandardError
       run[] unless bundler_loaded
     end
   end
@@ -72,4 +75,3 @@ instructions = "Type:\n\ncd #{target_dir}\nbin/rake article:new_article\nbin/pum
 puts instructions unless options[:quiet]
 
 require "fileutils"
-
