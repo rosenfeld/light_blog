@@ -15,6 +15,9 @@ for Google Analytics integration.
 
 Atom feeds are supported out-of-the-box.
 
+[This article](https://rosenfeld.page/articles/2023_03_01_lightblog_a_file_based_blog_app) is
+powered by LightBlog, so that you can see how it looks.
+
 ## Installation
 
 ### Automatic creation of a blog app
